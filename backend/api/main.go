@@ -108,6 +108,10 @@ MaxAge:           12 * time.Hour,
 		v1.GET("/results/:id", slideController.GetSlideResult)
 	}
 
+	// Add additional routes outside the v1 group to handle requests without the /v1 prefix
+	// This ensures backward compatibility or handles frontend requests that don't include the prefix
+	router.GET("/results/:id", slideController.GetSlideResult)
+
 	// Start the server
 	port := os.Getenv("PORT")
 	if port == "" {

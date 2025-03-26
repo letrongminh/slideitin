@@ -270,9 +270,16 @@ func (c *SlideController) StreamSlideStatus(ctx *gin.Context) {
 	streamCtx, cancelStream := context.WithCancel(ctx.Request.Context())
 	defer cancelStream()
 
+	// Add a channel to signal when the watch goroutine is done
+	watchDone := make(chan struct{})
+
 	// Watch for job updates from Firestore
 	go func() {
-		defer close(updates)
+		defer func() {
+			// Signal that the watch goroutine is done
+			close(watchDone)
+		}()
+		
 		err := c.queueService.WatchJob(streamCtx, id, updates)
 		if err != nil && err != context.Canceled {
 			log.Printf("Error watching job %s: %v", id, err)
@@ -284,6 +291,8 @@ func (c *SlideController) StreamSlideStatus(ctx *gin.Context) {
 		// Check if client closed connection
 		if ctx.Request.Context().Err() != nil {
 			cancelStream()
+			// Wait for the watch goroutine to finish before returning
+			<-watchDone
 			return false
 		}
 
@@ -310,6 +319,8 @@ func (c *SlideController) StreamSlideStatus(ctx *gin.Context) {
 				time.Sleep(100 * time.Millisecond)
 				
 				cancelStream()
+				// Wait for the watch goroutine to finish before returning
+				<-watchDone
 				return false
 			}
 			
@@ -352,4 +363,4 @@ func (c *SlideController) GetSlideResult(ctx *gin.Context) {
 		ctx.Data(http.StatusOK, "text/html", result.HTMLData)
 	}
 	return
-} 
+}
