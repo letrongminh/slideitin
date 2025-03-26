@@ -21,24 +21,35 @@ func main() {
 		log.Println("Warning: .env file not found, using system environment variables")
 	}
 
-	// Initialize the router
-	router := gin.Default()
+// Initialize the router
+router := gin.Default()
 
-	// Get frontend URL from environment variable
+// Trust proxy headers for Docker
+router.SetTrustedProxies([]string{"172.18.0.0/16"}) // Docker's default network
+
+// Get frontend URL from environment variable
 	frontendURL := os.Getenv("FRONTEND_URL")
 	if frontendURL == "" {
 		frontendURL = "http://localhost:3000" // Fallback for local development
 		log.Println("Warning: FRONTEND_URL not set, using default:", frontendURL)
 	}
 
-	// Configure CORS
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{frontendURL}, // Use environment variable
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Cache-Control", "Connection", "Access-Control-Allow-Origin"},
-		ExposeHeaders:    []string{"Content-Length", "Content-Type", "Cache-Control", "Content-Encoding", "Transfer-Encoding"},
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
+// Configure CORS
+router.Use(cors.New(cors.Config{
+AllowOrigins:     []string{frontendURL, "http://172.18.0.1"}, // Allow both frontend URL and Docker internal IP
+AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+AllowHeaders:     []string{
+    "Origin",
+    "Content-Type",
+    "Accept",
+    "Cache-Control",
+    "Connection",
+    "Authorization",
+    "X-Requested-With",
+}, 
+ExposeHeaders:    []string{"Content-Length", "Content-Type", "Cache-Control", "Content-Encoding", "Transfer-Encoding"},
+AllowCredentials: true,
+MaxAge:           12 * time.Hour,
 	}))
 
 	// Initialize Firestore client

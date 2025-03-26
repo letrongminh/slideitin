@@ -26,8 +26,11 @@ RUN apk update && apk add --no-cache ca-certificates
 # Copy the binary from the builder stage
 COPY --from=builder /app/main .
 
+# Create shared directory for file transfer
+RUN mkdir -p /shared
+
 # Expose the application port
 EXPOSE 8080
 
 # Run the application
-CMD ["./main"] 
+CMD ["./main"]

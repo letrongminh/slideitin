@@ -1,18 +1,18 @@
 package queue
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
-	"time"
-	"bytes"
-	"path/filepath"
-	"net/http" // Add http client
+	"net/http"
 	"os"
+	"path/filepath"
+	"time"
 
 	"cloud.google.com/go/firestore"
-	// Removed cloudtasks, taskspb, storage, timestamppb, io
 	"github.com/martin226/slideitin/backend/api/models"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

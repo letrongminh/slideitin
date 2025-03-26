@@ -45,8 +45,13 @@ export async function generateSlides(
   });
   
   try {
-    const response = await fetch(`${API_BASE_URL}/generate`, {
+    // Ensure the /v1 prefix is included in the path
+    const response = await fetch(`${API_BASE_URL}/v1/generate`, {
       method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
       body: formData,
     });
     
@@ -68,8 +73,8 @@ export function subscribeToSlideUpdates(
   onUpdate: (update: SlideUpdate) => void,
   onError: (error: Error) => void
 ): () => void {
-  // Create EventSource for SSE connection
-  const eventSource = new EventSource(`${API_BASE_URL}/slides/${slideId}`);
+  // Create EventSource for SSE connection, ensuring /v1 prefix
+  const eventSource = new EventSource(`${API_BASE_URL}/v1/slides/${slideId}`);
   
   // Handle normal update events
   eventSource.addEventListener('update', (event) => {
@@ -110,4 +115,4 @@ export function subscribeToSlideUpdates(
   return () => {
     eventSource.close();
   };
-} 
+}

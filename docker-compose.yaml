@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   firestore-emulator:
     image: google/cloud-sdk:latest
@@ -25,7 +23,7 @@ services:
     depends_on:
       - firestore-emulator
     volumes:
-      - ./backend/api:/app # Mount code for potential live reload
+      # - ./backend/api:/app # Removed to use compiled binary from image
       - shared-files:/shared # Mount shared volume for file transfer
 
   slides-service:
@@ -43,20 +41,22 @@ services:
     depends_on:
       - firestore-emulator
     volumes:
-      - ./backend/slides-service:/app # Mount code for potential live reload
+      # - ./backend/slides-service:/app # Removed to use compiled binary from image
       - shared-files:/shared # Mount shared volume for file transfer
 
   frontend:
-    build:
+    build: # Corrected indentation (2 spaces)
       context: ./frontend
       dockerfile: Dockerfile
-    ports:
+      args: # Add this section to pass build arguments
+        - NEXT_PUBLIC_API_URL=http://localhost:8081
+    ports: # Corrected indentation (2 spaces)
       - "3000:3000"
-    environment:
+    environment: # Corrected indentation (2 spaces)
       - NEXT_PUBLIC_API_URL=http://localhost:8081 # API on host port 8081
-    depends_on:
+    depends_on: # Corrected indentation (2 spaces)
       - api
-    volumes:
+    volumes: # Corrected indentation (2 spaces)
       - ./frontend:/app
       - /app/node_modules
       - /app/.next

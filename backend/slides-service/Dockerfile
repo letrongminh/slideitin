@@ -12,8 +12,11 @@ RUN go mod download
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the application - making sure to use correct path
 RUN CGO_ENABLED=0 GOOS=linux go build -o main .
+
+# Debug: check if the binary exists
+RUN ls -la /app/
 
 # Final stage
 FROM alpine:3.19
@@ -46,8 +49,9 @@ ENV CHROME_DISABLE_GPU 1
 # Install Marp CLI
 RUN npm install -g @marp-team/marp-cli
 
-# Copy the binary from the builder stage
+# Copy the binary from the builder stage and verify it exists
 COPY --from=builder /app/main .
+RUN ls -la /app/
 
 # Only copy the themes directory which contains static files
 COPY --from=builder /app/services/slides/themes ./services/slides/themes
@@ -56,4 +60,4 @@ COPY --from=builder /app/services/slides/themes ./services/slides/themes
 EXPOSE 8080
 
 # Run the application
-CMD ["./main"] 
+CMD ["./main"]
