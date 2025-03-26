@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  firestore-emulator:
+    image: google/cloud-sdk:latest
+    command: gcloud beta emulators firestore start --host-port=0.0.0.0:8080 --project=local-slideitin
+    ports:
+      - "8080:8080" # Expose emulator port
+
+  api:
+    build:
+      context: ./backend/api
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080" # Map container 8080 to host 8081
+    env_file:
+      - ./backend/api/.env
+    environment:
+      - FIRESTORE_EMULATOR_HOST=firestore-emulator:8080
+      - GOOGLE_CLOUD_PROJECT=local-slideitin
+      - SLIDES_SERVICE_URL=http://slides-service:8080
+      - FRONTEND_URL=http://localhost:3000
+      # CLOUD_TASKS related vars omitted for now
+      # GCS_BUCKET_NAME=local-slideitin-files # Dummy, might need mocking
+    depends_on:
+      - firestore-emulator
+    volumes:
+      - ./backend/api:/app # Mount code for potential live reload
+      - shared-files:/shared # Mount shared volume for file transfer
+
+  slides-service:
+    build:
+      context: ./backend/slides-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080" # Map container 8080 to host 8082
+    env_file:
+      - ./backend/slides-service/.env
+    environment:
+      - FIRESTORE_EMULATOR_HOST=firestore-emulator:8080
+      - GOOGLE_CLOUD_PROJECT=local-slideitin
+      # GCS_BUCKET_NAME=local-slideitin-files # Dummy, might need mocking
+    depends_on:
+      - firestore-emulator
+    volumes:
+      - ./backend/slides-service:/app # Mount code for potential live reload
+      - shared-files:/shared # Mount shared volume for file transfer
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8081 # API on host port 8081
+    depends_on:
+      - api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+
+volumes:
+  node_modules:
+  next_build:
+  shared-files: {} # Define the shared volume
