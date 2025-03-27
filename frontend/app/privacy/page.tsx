@@ -94,7 +94,7 @@ export default function Privacy() {
               </div>
               <div className="prose prose-slate lg:prose-lg">
                 <p className="text-muted-foreground leading-relaxed">
-                  Welcome to Slide it In (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). We value your privacy and are committed to protecting your personal information. 
+                  Welcome to MindShift Demo AutoSlide Maker (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). We value your privacy and are committed to protecting your personal information. 
                   This Privacy Policy explains how we collect, use, and protect the information you provide when using our service at{" "}
                   <a href="https://justslideitin.com" className="text-amber-500 hover:text-amber-600 no-underline border-b-2 border-amber-500/20 hover:border-amber-600/90 transition-colors">
                     justslideitin.com
@@ -232,4 +232,4 @@ export default function Privacy() {
       <Footer />
     </div>
   );
-} 
+}

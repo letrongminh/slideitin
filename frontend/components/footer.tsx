@@ -8,6 +8,7 @@ export default function Footer() {
       <p>
         No data is permanently stored on our servers.
         Read our <Link href="/privacy" className="underline hover:text-amber-600 font-medium transition-colors">Privacy Policy</Link>.
+        {/* Temporarily commenting out GitHub reference
         We&apos;re{" "}
         <Link
           href="https://github.com/martin226/slideitin"
@@ -18,6 +19,7 @@ export default function Footer() {
           open-source
         </Link>{" "}
         ❤️! By{" "}
+        */}
         <Link
           href="https://x.com/_martinsit"
           className="underline hover:text-amber-600 font-medium transition-colors"
@@ -30,4 +32,4 @@ export default function Footer() {
       </p>
     </footer>
   )
-} 
+}

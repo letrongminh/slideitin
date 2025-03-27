@@ -41,7 +41,7 @@ export default function Logo({
         className
       )}
     >
-      Slide it In
+      MindShift Demo AutoSlide Maker
     </h2>
   );
 

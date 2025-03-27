@@ -113,11 +113,11 @@ const Settings = ({ onNext, onBack, initialSettings }: SettingsProps) => {
           className="font-bold px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
         >
           <Wand2 className="h-5 w-5" />
-          Slide it In
+          Create Slides
         </motion.button>
       </div>
     </div>
   )
 }
 
-export default Settings 
+export default Settings

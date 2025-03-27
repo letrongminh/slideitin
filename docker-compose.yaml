@@ -50,10 +50,12 @@ services:
       dockerfile: Dockerfile
       args: # Add this section to pass build arguments
         - NEXT_PUBLIC_API_URL=http://localhost:8081
+        - NEXT_PUBLIC_APP_NAME=MindShift Demo AutoSlide Maker
     ports: # Corrected indentation (2 spaces)
       - "3000:3000"
     environment: # Corrected indentation (2 spaces)
       - NEXT_PUBLIC_API_URL=http://localhost:8081 # API on host port 8081
+      - NEXT_PUBLIC_APP_NAME=MindShift Demo AutoSlide Maker
     depends_on: # Corrected indentation (2 spaces)
       - api
     volumes: # Corrected indentation (2 spaces)

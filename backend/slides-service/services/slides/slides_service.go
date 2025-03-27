@@ -31,7 +31,7 @@ func NewSlideService(apiKey string) *SlideService {
 	if err != nil {
 		log.Fatalf("Failed to create Gemini client: %v", err)
 	}
-	model := client.GenerativeModel("gemini-1.5-flash")
+	model := client.GenerativeModel("gemini-2.0-flash")
 	model.SetMaxOutputTokens(4096)
 	return &SlideService{
 		client: client,

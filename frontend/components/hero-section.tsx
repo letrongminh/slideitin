@@ -149,9 +149,9 @@ export function HeroSection({ onUploadClick }: HeroSectionProps) {
               <div className="flex justify-center items-center">
                   <a 
                     className="github-button"
-                    href="https://github.com/martin226/slideitin" 
+                    // href="https://github.com/martin226/slideitin" 
                     data-size="large" 
-                    aria-label="Star martin226/slideitin on GitHub"
+                    // aria-label="Star martin226/slideitin on GitHub"
                   >
                     Star us on GitHub
                   </a>

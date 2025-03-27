@@ -62,7 +62,7 @@ export default function UseCases() {
             Transform Your Content Into Beautiful Presentations
           </h2>
           <p className="text-lg text-gray-600">
-            Slide it In helps you create professional slides in minutes, not hours.
+            MindShift Demo AutoSlide Maker giúp bạn tạo slides chuyên nghiệp chỉ trong vài phút.
             Here&apos;s how people are using it:
           </p>
         </motion.div>
@@ -136,4 +136,4 @@ export default function UseCases() {
       </div>
     </section>
   );
-} 
+}
