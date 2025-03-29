@@ -16,6 +16,7 @@ import (
 	"github.com/martin226/slideitin/backend/slides-service/models"
 	"github.com/martin226/slideitin/backend/slides-service/services/prompts"
 	"bytes"
+	"time" // Added for context timeout
 )
 
 // SlideService handles interactions with the Gemini API
@@ -210,13 +211,15 @@ func (s *SlideService) GenerateSlides(
 
 	log.Printf("Successfully generated HTML (%d bytes)", len(htmlBytes))
 	
-	// Delete the files from Gemini
-	for _, file := range geminiFiles {
-		err := s.client.DeleteFile(ctx, file.Name)
-		if err != nil {
-			log.Printf("Failed to delete file from Gemini: %v", err)
-		}
-	}
+// Delete the files from Gemini using a background context
+deleteCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+defer cancel()
+for _, file := range geminiFiles {
+if err := s.client.DeleteFile(deleteCtx, file.Name); err != nil {
+log.Printf("Failed to delete file from Gemini: %v", err)
+// Continue with other deletions, don't fail the overall process
+}
+}
 	
 	// Return the PDF and HTML bytes
 	return pdfBytes, htmlBytes, nil
@@ -250,4 +253,4 @@ func extractMarkdownContent(text string) string {
 	
 	// If no backticks found, return the entire text
 	return text
-} 
+}

@@ -119,7 +119,7 @@ func NewService(client *firestore.Client) (*Service, error) {
 		client:     client,
 		projectID:  projectID,
 		serviceURL: serviceURL,
-		httpClient: &http.Client{Timeout: time.Second * 30}, // Initialize HTTP client with timeout
+		httpClient: &http.Client{Timeout: time.Second * 180}, // Increased HTTP client timeout to 90 seconds
 	}, nil
 }
 

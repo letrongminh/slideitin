@@ -135,13 +135,16 @@ func (c *TaskController) ProcessSlides(ctx *gin.Context) {
 	}
 	
 	// Create result URL
-	resultURL := "/results/" + payload.JobID
-	
-	// Store result in Firestore
-	if err := c.storeResult(ctx.Request.Context(), payload.JobID, resultURL, pdfData, htmlData); err != nil {
-		log.Printf("Failed to store result: %v", err)
-		c.updateJobStatus(payload.JobID, "failed", fmt.Sprintf("Failed to store result: %v", err), "")
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to store result: %v", err)})
+resultURL := "/results/" + payload.JobID
+
+// Store result in Firestore using a background context with timeout
+storeCtx, storeCancel := context.WithTimeout(context.Background(), 15*time.Second)
+defer storeCancel()
+if err := c.storeResult(storeCtx, payload.JobID, resultURL, pdfData, htmlData); err != nil {
+log.Printf("Failed to store result: %v", err)
+// Still update job status using background context
+c.updateJobStatus(payload.JobID, "failed", fmt.Sprintf("Failed to store result: %v", err), "")
+ctx.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to store result: %v", err)})
 		return
 	}
 
